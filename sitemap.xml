@@ -2,12 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://twentysick.github.io/posts/ctf/cakectf/re/nimrev/cakectf-re-nimrev-writeup/</loc>
+    <lastmod>2022-09-04T16:01:25+07:00</lastmod>
+  </url><url>
+    <loc>https://twentysick.github.io/tags/ctf/</loc>
+    <lastmod>2022-09-04T16:01:25+07:00</lastmod>
+  </url><url>
+    <loc>https://twentysick.github.io/posts/</loc>
+    <lastmod>2022-09-04T16:01:25+07:00</lastmod>
+  </url><url>
+    <loc>https://twentysick.github.io/tags/</loc>
+    <lastmod>2022-09-04T16:01:25+07:00</lastmod>
+  </url><url>
+    <loc>https://twentysick.github.io/</loc>
+    <lastmod>2022-09-04T16:01:25+07:00</lastmod>
+  </url><url>
+    <loc>https://twentysick.github.io/tags/writeup/</loc>
+    <lastmod>2022-09-04T16:01:25+07:00</lastmod>
+  </url><url>
     <loc>https://twentysick.github.io/about/</loc>
   </url><url>
     <loc>https://twentysick.github.io/categories/</loc>
-  </url><url>
-    <loc>https://twentysick.github.io/tags/</loc>
-  </url><url>
-    <loc>https://twentysick.github.io/</loc>
   </url>
 </urlset>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Twenty Sick</title>
-    <link>https://twentysick.github.io/</link>
-    <description>Recent content on Twenty Sick</description>
+    <title>Writeup on Twenty Sick</title>
+    <link>https://twentysick.github.io/tags/writeup/</link>
+    <description>Recent content in Writeup on Twenty Sick</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Sep 2022 16:01:25 +0700</lastBuildDate><atom:link href="https://twentysick.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 04 Sep 2022 16:01:25 +0700</lastBuildDate><atom:link href="https://twentysick.github.io/tags/writeup/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CakeCTF - RE - nimrev</title>
       <link>https://twentysick.github.io/posts/ctf/cakectf/re/nimrev/cakectf-re-nimrev-writeup/</link>
@@ -18,15 +18,6 @@ Let look around this file by ghidra.
 Hehe, bingo, look at what I found there. The dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 Ok, I just found this by string &amp;ldquo;Wrong&amp;hellip;&amp;rdquo; and leaked some data.
 *(undefined *)(plVar3 + 2) = 0xbc; *(undefined *)((long)plVar3 + 0x11) = 0x9e; *(undefined *)((long)plVar3 + 0x12) = 0x94; *(undefined *)((long)plVar3 + 0x13) = 0x9a; *(undefined *)((long)plVar3 + 0x14) = 0xbc; *(undefined *)((long)plVar3 + 0x15) = 0xab; *(undefined *)((long)plVar3 + 0x16) = 0xb9; *(undefined *)((long)plVar3 + 0x17) = 0x84; *(undefined *)(plVar3 + 3) = 0x8c; *(undefined *)((long)plVar3 + 0x19) = 0xcf; *(undefined *)((long)plVar3 + 0x1a) = 0x92; *(undefined *)((long)plVar3 + 0x1b) = 0xcc; *(undefined *)((long)plVar3 + 0x1c) = 0x8b; *(undefined *)((long)plVar3 + 0x1d) = 0xce; *(undefined *)((long)plVar3 + 0x1e) = 0x92; *(undefined *)((long)plVar3 + 0x1f) = 0xcc; *(undefined *)(plVar3 + 4) = 0x8c; *(undefined *)((long)plVar3 + 0x21) = 0xa0; *(undefined *)((long)plVar3 + 0x22) = 0x91; *(undefined *)((long)plVar3 + 0x23) = 0xcf; *(undefined *)((long)plVar3 + 0x24) = 0x8b; *(undefined *)((long)plVar3 + 0x25) = 0xa0; *(undefined *)((long)plVar3 + 0x26) = 0xbc; *(undefined *)((long)plVar3 + 0x27) = 0x82; By my experience collected from some RE challenges, I tried XOR it with the number of character &amp;lsquo;C&amp;rsquo;, &amp;lsquo;a&amp;rsquo;, &amp;lsquo;k&amp;rsquo;, &amp;rsquo;e&amp;rsquo; from ASCII table.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://twentysick.github.io/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://twentysick.github.io/about/</guid>
-      <description>A little shit about me 🏫 Student from FPT University 🌱 Learning cybersecurity 🐟 My zodiac: ♓ Pisces ♓ ⚡ Like Arts, Music (The Beatles and PINK FLOYDDDDDDDDDDDDDDDDDDDDDDD) 🎮 Noob gamer :3 (Just play for relaxing) ♥ Relationship: &amp;hellip; Not found &amp;hellip; My achievement: </description>
     </item>
     
   </channel>
