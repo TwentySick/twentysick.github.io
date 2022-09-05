@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on Twenty Sick</title>
+    <link>https://twentysick.github.io/tags/java/</link>
+    <description>Recent content in Java on Twenty Sick</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 05 Sep 2022 23:56:27 +0700</lastBuildDate><atom:link href="https://twentysick.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linked List</title>
+      <link>https://twentysick.github.io/posts/java/linkedlist/</link>
+      <pubDate>Mon, 05 Sep 2022 23:56:27 +0700</pubDate>
+      
+      <guid>https://twentysick.github.io/posts/java/linkedlist/</guid>
+      <description>Simply Linked List Code khởi tạo element trong Linked List
+Code:
+public class Node { int value; Node next; public Node(){ } public Node(int value, Node next){ this.value = value; this.next = next; } public Node(int value){ this.value = value; this.next = null; } } || || || || \ / \/ +-------------------+--------------+ | | | | Value | Next | | | | +-------------------+--------------+ Một phần tử trong list bao gồm 2 phần là value và next:</description>
+    </item>
+    
+  </channel>
+</rss>

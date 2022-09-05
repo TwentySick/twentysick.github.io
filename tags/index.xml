@@ -6,7 +6,16 @@
     <description>Recent content in Tags on Twenty Sick</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Sep 2022 16:01:25 +0700</lastBuildDate><atom:link href="https://twentysick.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 05 Sep 2022 23:56:27 +0700</lastBuildDate><atom:link href="https://twentysick.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java</title>
+      <link>https://twentysick.github.io/tags/java/</link>
+      <pubDate>Mon, 05 Sep 2022 23:56:27 +0700</pubDate>
+      
+      <guid>https://twentysick.github.io/tags/java/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>CTF</title>
       <link>https://twentysick.github.io/tags/ctf/</link>
