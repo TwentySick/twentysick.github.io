@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Security research, reverse engineering, malware analysis, and Windows internals.">
+  <title>TWENTYSICK</title>
+  <style>
+/* =========================================================
+   SIX.TWENTY — shared site stylesheet
+   ========================================================= */
+
+:root {
+  --bg: #080a0c;
+  --bg-soft: #0d1013;
+  --panel: rgba(14, 18, 21, .78);
+  --text: #d8dee3;
+  --muted: #737d86;
+  --line: #20272d;
+  --accent: #a7ff5f;
+  --accent-dim: #5f9b38;
+  --max-width: 1100px;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(167,255,95,.045), transparent 28%),
+    radial-gradient(circle at 85% 75%, rgba(95,155,56,.035), transparent 30%),
+    var(--bg);
+  font-family: var(--sans);
+  line-height: 1.7;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+  z-index: -1;
+}
+
+a { color: inherit; text-decoration: none; }
+code, pre, .mono { font-family: var(--mono); }
+
+.container {
+  width: min(calc(100% - 40px), var(--max-width));
+  margin-inline: auto;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(32,39,45,.85);
+  background: rgba(8,10,12,.82);
+  backdrop-filter: blur(14px);
+}
+
+.nav {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  font: 700 14px/1 var(--mono);
+  letter-spacing: .12em;
+}
+
+.brand span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  font: 12px var(--mono);
+  color: var(--muted);
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+.hero {
+  min-height: 78vh;
+  display: grid;
+  align-items: center;
+  padding: 100px 0 80px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font: 12px var(--mono);
+  letter-spacing: .12em;
+  margin-bottom: 22px;
+}
+
+.eyebrow::before {
+  content: ">";
+  margin-right: 8px;
+}
+
+h1 {
+  max-width: 820px;
+  margin: 0;
+  font: 600 clamp(42px, 8vw, 92px)/.96 var(--mono);
+  letter-spacing: -.065em;
+}
+
+.hero h1 .accent { color: var(--accent); }
+
+.hero-copy {
+  max-width: 650px;
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.cursor {
+  display: inline-block;
+  width: 9px;
+  height: 1em;
+  margin-left: 5px;
+  vertical-align: -.12em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.status-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 22px;
+  font: 12px/1.9 var(--mono);
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  padding: 7px 0;
+}
+
+.status-row:last-child { border-bottom: 0; }
+.label { color: var(--muted); }
+.value { color: var(--text); text-align: right; }
+.online { color: var(--accent); }
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.button {
+  border: 1px solid var(--line);
+  padding: 10px 15px;
+  font: 12px var(--mono);
+  transition: .2s ease;
+}
+
+.button:hover {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.button.primary {
+  color: #081006;
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+section {
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+}
+
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  margin: 0;
+  font: 600 18px var(--mono);
+}
+
+.section-number {
+  color: var(--muted);
+  font: 11px var(--mono);
+}
+
+.post-list { border-top: 1px solid var(--line); }
+
+.post {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  transition: padding .2s ease, background .2s ease;
+}
+
+.post:hover {
+  padding-left: 10px;
+  padding-right: 10px;
+  background: rgba(167,255,95,.025);
+}
+
+.post-title {
+  color: var(--accent);
+  margin: 0 0 5px;
+  font: 500 15px var(--mono);
+}
+
+.post-meta {
+  color: var(--muted);
+  font: 11px var(--mono);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.info-card {
+  min-height: 170px;
+  padding: 25px;
+  background: var(--bg-soft);
+}
+
+.info-card h3 {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font: 12px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tag {
+  display: inline-block;
+  border: 1px solid var(--line);
+  padding: 5px 8px;
+  color: var(--text);
+  font: 10px var(--mono);
+}
+
+.terminal-profile {
+  max-width: 820px;
+  margin: 0 auto;
+  font-family: var(--mono);
+}
+
+.terminal-command {
+  margin-bottom: 18px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.profile-cards {
+  display: grid;
+  gap: 14px;
+}
+
+.profile-card {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .018);
+  position: relative;
+  transition: border-color .25s ease, transform .25s ease, background .25s ease;
+}
+
+.profile-card::before,
+.profile-card::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+}
+
+.profile-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+
+.profile-card::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+}
+
+.profile-card:hover {
+  border-color: rgba(167, 255, 95, .35);
+  background: rgba(167, 255, 95, .025);
+  transform: translateX(4px);
+}
+
+.profile-index {
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+
+.profile-card h3 {
+  margin: 0 0 7px;
+  font-size: 14px;
+  letter-spacing: .06em;
+}
+
+.profile-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.about-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.about-text {
+  color: var(--muted);
+  max-width: 650px;
+}
+
+.terminal {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  background: #060809;
+  padding: 20px;
+  font: 12px/1.9 var(--mono);
+  color: var(--muted);
+}
+
+.terminal-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 13px;
+  margin-left: 4px;
+  vertical-align: -2px;
+  background: var(--accent);
+  animation: terminal-blink 1s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.green { color: var(--accent); }
+.dim { color: #485159; }
+
+footer {
+  padding: 30px 0 45px;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+
+/* ---------- Blog post ---------- */
+
+.post-page {
+  padding: 100px 0 110px;
+}
+
+.post-header {
+  max-width: 850px;
+  margin: 0 auto 70px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 40px;
+  color: var(--muted);
+  font: 11px var(--mono);
+}
+
+.back-link:hover { color: var(--accent); }
+
+.post-category {
+  margin-bottom: 20px;
+  color: var(--accent);
+  font: 11px var(--mono);
+  letter-spacing: .1em;
+}
+
+.post-header h1 {
+  max-width: none;
+  font-size: clamp(38px, 7vw, 76px);
+  letter-spacing: -.055em;
+}
+
+.post-header .post-meta {
+  margin-top: 22px;
+}
+
+.post-description {
+  max-width: 700px;
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.post-content {
+  max-width: 760px;
+  margin: 0 auto;
+  font-size: 16px;
+}
+
+.post-content h2 {
+  margin: 58px 0 18px;
+  font: 600 24px/1.25 var(--mono);
+  letter-spacing: -.03em;
+}
+
+.post-content h3 {
+  margin: 42px 0 15px;
+  font: 600 17px var(--mono);
+}
+
+.post-content p { margin: 0 0 24px; }
+
+.post-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.post-content blockquote {
+  margin: 30px 0;
+  padding: 8px 22px;
+  border-left: 2px solid var(--accent);
+  color: var(--muted);
+}
+
+.post-content ul,
+.post-content ol {
+  margin: 0 0 26px;
+  padding-left: 25px;
+}
+
+.post-content li { margin: 7px 0; }
+
+.post-content code {
+  padding: 2px 5px;
+  border: 1px solid var(--line);
+  background: #060809;
+  font-size: .88em;
+}
+
+.post-content pre {
+  overflow-x: auto;
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: #060809;
+  color: #c8d0d5;
+  font: 12px/1.75 var(--mono);
+}
+
+.post-content pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.post-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 35px auto;
+  border: 1px solid var(--line);
+}
+
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+  font-size: 13px;
+}
+
+.post-content th,
+.post-content td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.post-content th {
+  color: var(--accent);
+  font: 11px var(--mono);
+}
+
+.post-footer {
+  max-width: 760px;
+  margin: 70px auto 0;
+  padding-top: 25px;
+  border-top: 1px solid var(--line);
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 30px;
+}
+
+/* ---------- Reveal ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 760px) {
+  .container { width: min(calc(100% - 28px), var(--max-width)); }
+
+  .nav { min-height: 58px; }
+  .nav-links { gap: 12px; font-size: 10px; }
+
+  .hero {
+    min-height: auto;
+    padding: 80px 0 70px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .terminal-profile {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+.about-grid {
+    gap: 35px;
+  }
+
+  h1 { font-size: clamp(42px, 14vw, 68px); }
+
+  .hero-copy { font-size: 14px; }
+  .status-card { animation: none; }
+
+  section { padding: 65px 0; }
+
+  .post {
+    grid-template-columns: 35px 1fr;
+    gap: 14px;
+  }
+
+  .post-date { grid-column: 2; }
+
+  .info-grid { grid-template-columns: 1fr; }
+
+  .post-page { padding: 70px 0 80px; }
+  .post-header { margin-bottom: 50px; }
+
+  .footer-inner {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="brand" href="#">TWENTYSICK<span>.</span></a>
+    <nav class="nav-links">
+      <a href="#about">ABOUT ME</a>
+      <a href="#blog">BLOG</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+
+<section class="hero">
+  <div class="container hero-grid">
+
+    <div class="reveal">
+      <div class="eyebrow">SECURITY RESEARCH / REVERSE ENGINEERING</div>
+
+      <h1>
+        Breaking things<br>
+        to understand<br>
+        <span class="accent">how they work.</span><span class="cursor"></span>
+      </h1>
+
+      <p class="hero-copy">
+        Personal notes, research, experiments, and technical write-ups
+        around malware analysis, reverse engineering, Windows internals,
+        and low-level systems.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button primary" href="#blog">VIEW BLOG</a>
+        <a class="button" href="https://twentysick.gitbook.io/" target="_blank" rel="noopener">GITBOOK ↗</a>
+      </div>
+    </div>
+
+    <div class="status-card reveal">
+      <div class="status-row"><span class="label">STATUS</span><span class="value online">● UNKNOWN</span></div>
+      <div class="status-row"><span class="label">FOCUS</span><span class="value">RE / MALWARE</span></div>
+      <div class="status-row"><span class="label">PLATFORM</span><span class="value">WINDOWS</span></div>
+      <div class="status-row"><span class="label">LOCATION</span><span class="value">EARTH</span></div>
+      <div class="status-row"><span class="label">BUILD</span><span class="value">2026.10</span></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="about">
+  <div class="container reveal">
+    <div class="section-heading">
+      <h2 class="section-title">ABOUT ME</h2>
+      <span class="section-number">[01]</span>
+    </div>
+
+    <div class="about-grid">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div><span class="dim">$</span> cat about-me.txt</div>
+        <div class="green">
+          <pre>┌─[ twentysick ]──────────────────────────────────────────────────────────────────────────────────────┐
+│  I'm a security enthusiast interested in understanding software from the lowest practical level.    │
+│  This site is a small collection of technical notes, experiments, and things I learn while taking   │
+│  software apart.                                                                                    │
+│  Most of the interesting work happens somewhere between source code, assembly, operating-system     │
+│  internals, and a debugger.                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────┘</pre>
+        </div>
+        <div><span class="dim">$</span> cat interests.txt</div>
+        <div class="green">
+          <pre>
+┌───────────────────────────────────────┬───────────────────────┬─────────────────────────────────────┐
+│                 FOCUS                 │        TOOLBOX        │        PROGRAMMING LANGUAGES        │
+├───────────────────────────────────────┼───────────────────────┼─────────────────────────────────────┤
+│ - MALWARE                             │ - IDA                 │ - C                                 │
+│ - REVERSE ENGINEERING                 │ - GHIDRA              │ - C++                               │
+│ - WINDOWS INTERNALS                   │ - X64DBG              │ - PYTHON                            │
+│ - LOW-LEVEL PROGRAMMING               │ - WINDBG              │ - ASSEMBLY                          │
+│                                       │ - ...                 │ - ...                               │
+└───────────────────────────────────────┴───────────────────────┴─────────────────────────────────────┘</pre>
+        </div>
+        <div><span class="dim">$</span> <span class="terminal-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog">
+  <div class="container reveal">
+    <div class="section-heading">
+      <h2 class="section-title">LATEST WRITING</h2>
+      <span class="section-number">[02]</span>
+    </div>
+
+    <div class="post-list">
+      <a class="post" href="https://twentysick.gitbook.io/twentysick/sharing/series-phat-minh-lai-cai-banh-xe/windows-native-application">
+        <div>
+          <h3 class="post-title">Windows Native Application</h3>
+          <div class="post-meta">WINDOWS · RESEARCH · NATIVE</div>
+        </div>
+      </a>
+      <a class="post" href="https://twentysick.gitbook.io/twentysick/sharing/series-phat-minh-lai-cai-banh-xe/iis-native-module-nhung-la-backdoor">
+        <div>
+          <h3 class="post-title">IIS Native Module nhưng là Backdoor?</h3>
+          <div class="post-meta">WINDOWS · MALWARE · RESEARCH</div>
+        </div>
+      </a>
+      <a class="post" href="https://twentysick.gitbook.io/twentysick/writeup/flare-on/flare-on-2025">
+        <div>
+          <h3 class="post-title">Writeup Flare-On 12</h3>
+          <div class="post-meta">CTF CHALLENGE · WRITEUP</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span>© 2026 TWENTYSICK.</span>
+    <span>BUILT WITH HTML / CSS / JS AND CHATGPT FREE PLAN</span>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>
+</body>
+</html>
